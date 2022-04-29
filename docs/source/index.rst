@@ -17,7 +17,7 @@ Bob Morgan 著
 .. toctree::
    :maxdepth: 3
 
-...preface
+   preface
    chapter01
    chapter02
    chapter03
@@ -33,7 +33,6 @@ Bob Morgan 著
    chapter13
    chapter14
    chapter15
-
 
 
 Indices and tables
