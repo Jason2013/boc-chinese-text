@@ -21,6 +21,7 @@ project = 'Building an Optimizing Compiler中文版'
 copyright = '2022, 潘立丰'
 author = '潘立丰'
 
+version = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 
