@@ -33,3 +33,5 @@
 .. figure:: chapter03/figure-3.1.png
 
     图 3.1 Flow Graph for MAXCOL
+
+另一种技术是为每个节点分配一个整数并表示每个节点边作为布尔矩阵中的位。如果节点 X 和 Y 之间有一条边，则该位在位置 EDGE[X,Y] 设置为真；否则为假。
