@@ -25,9 +25,13 @@
 
 为了说明全局和局部寄存器分配的相互作用，考虑图13.1中一个block的图示。使用活跃临时变量的指令集合表示为水平间距。每个临时变量表示为不同的行。全局寄存器分配器会创建像R1、R2和R4那样的情形。R1在另一个block被赋予一个值，其值在这个block中被最后一次使用。R2在这个block中被赋予一个值，其值在另一个block中被使用。R4结合两种情况：R4在这个block中被赋予一个值，控制流离开又回到这个block，在这个block的较早处使用这个值。R3是典型的局部临时变量。它在block中被赋予一个值，之后其值在这个block中被最后一次使用。在大型函数中，这是最常见的临时变量。全局分配器为R1、R2和R4分配寄存器。FAT算法会让R2和R4与其它局部临时变量结合。局部分配器为R3分配寄存器。
 
-<Figure 13.1 Pictorial Representation of Block>
+.. figure:: chapter13/figure-13.1.png
 
-<Figure 13.2 Driver for Register Allocation>
+    Figure 13.1 Pictorial Representation of Block
+
+.. figure:: chapter13/figure-13.2.png
+
+    Figure 13.2 Driver for Register Allocation
 
 记得所有这些算法都是近似最优分配。通过求解整数规划问题可以达到最优分配；但是，对于产品编译器来说，这种技术代价太高。
 
@@ -50,7 +54,9 @@ Chaitin为图着色重新应用一种启发式方法，它对复杂控制流是�
 
 图13.3中的冲突图说明了启发式方法和一个较新的改进。有四个临时变量，边表示冲突。S3有一个邻居，可以把它移出图，留下S0、S1和S2。移出S3之后，它们各自有两个邻居，因此接着可以移出它们中的任意一个，比如说S0，然后S1，接着S2。最后，我们得到一个序列（S2，S1，S0，S3），它们需要被赋予寄存器。S2是第一个。把它放回到图中，赋予它任意寄存器，比如R0。S1是下一个：把它放回图中，赋予它一个寄存器，任意除了赋予S2的寄存器，比如说R1。类似地，对S0，赋予它R2。最后，要给S3赋予一个寄存器。它只和S2冲突（S2被赋予R0），可以被赋予1或R2。如此，这个算法可以分配寄存器，尽管S2有三个邻居。
 
-<Figure 13.3 Example Conflict Graph>
+.. figure:: chapter13/figure-13.3.png
+
+    Figure 13.3 Example Conflict Graph
 
 纵然算法是借用序列描述的，我们看到，节点移出栈的次序和它们被赋予寄存器的次序是相反的。如此，当节点被移出冲突图时，它被压入栈，当它被再次插入冲突图时，它被弹出栈。
 
@@ -87,7 +93,9 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 然后，利用启发式方法从冲突图中移除节点，把它们压入到寄存器（临时变量）栈中。节点是按照bucket排序的，编译器只需要查看其中一个bucket。
 
-<Figure 13.4 Driver Procedure for Global Allocation>
+.. figure:: chapter13/figure-13.4.png
+
+    Figure 13.4 Driver Procedure for Global Allocation
 
 应该首先检查哪些bucket？是所包含的节点具有最多边的bucket，还是所包含的节点具有最少边的bucket？对作者来说，这是不明确的。如果首先查看边最多的节点，那么被移除的每个节点的边的总数更大，很可能更多节点的边的数目小于寄存器的数目。如果首先查看邻居较少（边较少）的节点，那么邻居数较小的节点将最后被着色，那时着色的自由度更小。当可用的寄存器较多时，将首先着色邻居数较大的节点。这个问题没有明确的答案。本书的设计首先查看边较少的节点，因为这样伪代码更简单。想要试验不同的次序，只需修改循环中引用bucket的地方[2]。
 
@@ -104,13 +112,17 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 临时变量被压入了栈中，易于分配的临时变量在栈的底部，难于分配的临时变量在顶部，之后，图13.6中的算法遍历整个栈，为临时变量赋予颜色。每个临时变量必须被赋予一个不同于其邻居的颜色。
 
-<Figure 13.5 Building Stack of Temporaries to Allocate>
+.. figure:: chapter13/figure-13.5.png
+
+    Figure 13.5 Building Stack of Temporaries to Allocate
 
 注意，算法不会试图更新返回到图中的邻居的数目。它不会更新属性InGraph，因为它是用来告知已经着色了一个临时变量。
 
 如果查看所有邻居之后，发现没有剩余的寄存器，就挤出（spill）这个临时变量。这包括，设置InGraph属性为假，指示它没有关联的物理寄存器，将这个临时变量添加到SpillRegisters。局部寄存器分配器会想办法插入载入和存储操作，实现临时变量挤出。
 
-<Figure 13.6 Register Coloring Algorithm>
+.. figure:: chapter13/figure-13.6.png
+
+    Figure 13.6 Register Coloring Algorithm
 
 13.1.5 选择实际的物理寄存器
 ===========================
@@ -119,7 +131,9 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 图13.7中的算法实现了这些想法，还附加了一个想法。考虑临时变量T，正在为它分配寄存器。它的有些邻居（其InGraph属性为假），不妨称其中之一为U，还没有分配寄存器。如果可以为T分配一个寄存器，相同于其它和U冲突的临时变量之一的寄存器，那么到时候为U分配寄存器可能更容易。
 
-<Figure 13.7 Choosing the Register>
+.. figure:: chapter13/figure-13.7.png
+
+    Figure 13.7 Choosing the Register
 
 如果这个启发式方法行不通，就尝试给T赋予一个已经被使用的物理寄存器。这会降低已用寄存器的数目。记得指令调度已经发生，编译器已经重排指令，使用更多寄存器不会带来任何好处。
 
@@ -134,7 +148,7 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 选择临时变量压入栈时，有两个因素。寄存器着色的次序，和它们被放入栈的次序相反，编译器应该将最不重要的临时变量压入栈中。其次，编译器应该压入一个临时变量，它和大量不在栈中的临时变量冲突。这会减小冲突图中边的数目，使得更多节点更有可能满足着色启发式方法。编译器必须把这两个条件拼合在一起，形成单个算法或方程，来描述节点的优先级。很多方程可以做到；我们使用Chaitin的方程，它选择值最小的临时变量：
 
-[]
+.. figure:: chapter13/figure-13.func.png
 
 不幸的是，编译器无法预先计算以上信息，为可能发生挤出的地方保存起来，因为在临时变量压入栈的过程中，属性NumberLeft(T)在不断地变化。作为替代，编译器预先计算下面的方程，然后在需要挤出的时候执行除法：
 
@@ -153,7 +167,9 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 在局部寄存器分配之前，编译器必须处理那些全局寄存器分配器没有给它们分配寄存器的全局临时变量。它们是集合SpillRegisters中的临时变量。编译器必须检查整个block，执行三个任务。首先，在这些临时变量最后一次被赋值之后，必须插入一个STORE指令，把值写到内存。其次，在这些临时变量第一次被使用之前，必须插入一个LOAD指令，从内存读取值，如果这个使用的前面不是对临时变量的赋值的话。最后，在这个block内，必须给予这个临时变量一个新的名字。每个临时变量关联着一个单一的名字，每当编译器把临时变量引用分割为单独分配的部分时，必须为它创建一个新的名字。临时变量有了新的名字，它在不同的block里就可以被分配为不同的寄存器。
 
-<Figure 13.8 Main Local Allocation Procedure>
+.. figure:: chapter13/figure-13.8.png
+
+    Figure 13.8 Main Local Allocation Procedure
 
 图13.9中的算法分两步执行了这三个任务。第一个pass反向遍历指令，对于这些临时变量的每一个，找出为其赋值的最后一条指令。在这些指令后面插入一个存储操作。同时，确定哪些临时变量前面需要插入一个载入操作。它一开始假设载入操作是需要的，如果发现了早前对临时变量的赋值，就否定这个假设。
 
@@ -171,7 +187,9 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 * LocalRegisters：这些局部临时变量在block中变为活跃，后来在block中变为不活跃。在计算密集的程序中，这是数量最大的一类临时变量。为这些临时变量分配物理寄存器是本节的重点。注意，挤出的临时变量所关联的新建临时变量属于这一类。
 
-<Figure 13.9 Spilling and Classifying Temporaries>
+.. figure:: chapter13/figure-13.9.png
+
+    Figure 13.9 Spilling and Classifying Temporaries
 
 图13.10中的算法在block内精确地重新计算活跃信息，按照上面的定义，利用该活跃信息分类所有临时变量。举例来说，LiveTransparent中的临时变量在block的出口是活跃的，在block内没有对它的引用。因此，LiveTransparent初始化为出口处活跃的临时变量集合，然后移除被引用的临时变量。其它集合处理起来是类似的。
 
@@ -181,11 +199,15 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 [4编译器编写者经常忘记有两类程序员。人类程序员更容易应付。编译器可以估算使用的模式。程序编写的程序更难处理，它们包含不友好的结构。]
 
-<Figure 13.10 Classifying Temporaries in a Block>
+.. figure:: chapter13/figure-13.10.png
+
+    Figure 13.10 Classifying Temporaries in a Block
 
 算法还计算临时变量的活跃范围。FAT算法需要该信息。为了记录该信息，赋予每条指令两个数字。从block的末尾开始，数字为0，向着block的开始处，数字递增。数字对中小的那个代表修改寄存器的指令部分。大的那个代表获取操作数的指令部分。
 
-<Figure 13.11 Building Lifetimes and Local Conflict Graph>
+.. figure:: chapter13/figure-13.11.png
+
+    Figure 13.11 Building Lifetimes and Local Conflict Graph
 
 每个临时变量关联两个属性。StartTime(T)是关联写临时变量的指令的计数。如果临时变量在block的开始是活跃的，那么它引用一个在block前的值。EndTime(T)是引用临时变量的最后一条指令的计数。如果临时变量在block末尾是活跃的，那么这个属性指代block的末尾。一次遍历block，模拟计算活跃信息，计算得到这些属性，临时变量第一次变为活跃时，赋值EndTime，第一次变为不活跃时，赋值StartTime。
 
@@ -209,7 +231,9 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 在这个时刻，已经没有我们所关心的在block开头活跃的临时变量，于是我们可以应用单pass局部寄存器分配器，如上面描述的那样。
 
-<Figure 13.12 Build Buckets for Local Coloring>
+.. figure:: chapter13/figure-13.12.png
+
+    Figure 13.12 Build Buckets for Local Coloring
 
 这是我们所用的算法。唯一的修改是，在每次处理这些临时变量时，编译器应用着色启发式方法，移除容易的寄存器。这是我们在图13.8中描述的算法。现在我们描述支持函数（support procedure）。
 
@@ -217,19 +241,29 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
 注意，应用着色启发式方法的时候，应该不会涉及挤出（spilling）。当临时变量的邻居数小于颜色数时，将它压入栈中。如果条件不成立，就不能压入栈中。应用FAT启发式方法的时候，一个物理寄存器被放到一边，不再参与其中，因此允许的邻居数减小1。这不影响之前压入栈中的任意临时变量。
 
-<Figure 13.13 Building Local Graph-Coloring Stack>
+.. figure:: chapter13/figure-13.13.png
+
+    Figure 13.13 Building Local Graph-Coloring Stack
 
 图13.15描述了单pass寄存器分配器。它是一个单一的pass，模拟活跃信息计算（所以它知道一个临时变量何时变为活跃），当一个临时变量变为活跃时，分配空闲的物理寄存器。如果一个临时变量已经有一个颜色了，就不需要给它赋予一个。可能需要在block内挤出（spill）临时变量，由于FAT启发式方法的失败。
 
-<Figure 13.14 Coloring the Easy Local Temporaries>
+.. figure:: chapter13/figure-13.14.png
 
-<Figure 13.15 One-Pass Register Allocation>
+    Figure 13.14 Coloring the Easy Local Temporaries
+
+.. figure:: chapter13/figure-13.15.png
+
+    Figure 13.15 One-Pass Register Allocation
 
 图13.16中的FAT启发式方法是对原始描述的直接实现。利用FinishTime局部变量，选择非重叠的生命期。按照逆向执行顺序遍历，这个变量指示了这样的点，在那里最近添加到覆盖集合中的临时变量再次变为不活跃。属性BeginTime指示了这样的点，在那里一个全局临时变量变为不活跃，它将要和所有这些临时变量共享一个物理寄存器。因此，被选择的下一个临时变量应该在最大压力点活跃，并且它的生命期不和开头的全局变量或覆盖集合中前面的临时变量重叠。
 
-<Figure 13.16 FAT Heuristic>
+.. figure:: chapter13/figure-13.16.png
+
+    Figure 13.16 FAT Heuristic
 
 当需要挤出（spilling）的时候，使用经典的挤出启发式方法（图13.17）。在寄存器分配的过程中，考虑一条指令I，它有一个操作数需要一个赋予物理寄存器的临时变量。没有足够的物理寄存器，于是选择一个临时变量，它前面的使用是最远的。在I之后插入一个载入操作，在临时变量的上一次定义之后插入一个存储操作，这样一个寄存器被释放了，可用于block中可能最长的一段时间。
 
-<Figure 13.17 Spilling within the Block>
+.. figure:: chapter13/figure-13.17.png
+
+    Figure 13.17 Spilling within the Block
 
