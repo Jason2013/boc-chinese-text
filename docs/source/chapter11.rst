@@ -148,11 +148,13 @@
 
 为了检查特定冲突的存在，编译器使用一个链接的哈希表，ConflictHash，它的尺寸大约是HASHSIZE，它可以是2的幂，因为用了简单的哈希函数。设Ti是由整数i表示的临时变量，相应地，设Tj是由整数j表示的临时变量。由于我们对临时变量的频率和相互关系一无所知，哈希函数线性化相应对称位矩阵中的条目，并除以表的尺寸。换句话说，哈希函数生成一个索引，去索引哈希表中的一个链表。当然，根据hashnext向下扫描这个链表，直到找到匹配的smaller和larger，表明找到了一条边。
 
-Conflict(Ti, Tj) =
-(if i < j then
-    j(j - 1)/2 + i
- else
-    i(i - 1)/2 + j) mod HASHSIZE
+.. code::
+
+    Conflict(Ti, Tj) =
+    (if i < j then
+        j(j - 1)/2 + i
+     else
+        i(i - 1)/2 + j) mod HASHSIZE
 
 <Figure 11.9 Structure of a Conflict Entry>
 
