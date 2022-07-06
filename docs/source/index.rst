@@ -11,7 +11,6 @@ Building an Optimizing Compiler（中文版）
 
 Bob Morgan 著
 
-潘立丰 译
 
 
 .. toctree::
@@ -21,6 +20,8 @@ Bob Morgan 著
    chapter01
    chapter02
    chapter03
+   chapter11
+   chapter13
 
 
 Indices and tables
