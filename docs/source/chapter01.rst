@@ -96,10 +96,22 @@ Ken Kennedy，纽约大学（NYU）的一个学生，在莱斯（Rice）大学�
 
 本书会一直使用图1.1中的样例函数，去激励设计，演示细节。如此，它会成为本书大部分阐述的中心。学生们应该把图1.2 - 1.4中的样例当作编译过程的例证。学生应该把每一章开发的技术应用到样例。本书也会时时给出这些样例的答案，如此学生就可以检查他/她的答案是否和书本的答案匹配。
 
-<1.1 Running Exercise Throughout Book>
-<1.2 Matrix Multiply Example>
-<1.3 Computing the Maximum Monotone Subsequence>
-<1.4 Recursive Version of a Binary Search>
+.. figure:: chapter01/figure-1.1.png
+
+    Figure 1.1 Running Exercise Throughout Book
+
+.. figure:: chapter01/figure-1.2.png
+
+    Figure 1.2 Matrix Multiply Example
+
+.. figure:: chapter01/figure-1.3.png
+
+    Figure 1.3 Computing the Maximum Monotone Subsequence
+
+.. figure:: chapter01/figure-1.4.png
+
+    Figure 1.4 Recursive Version of a Binary Search
+
 
 图1.2是一个经典的矩阵相乘算法。它包含大量的浮点数计算，伴随着不平衡的内存访问。如图所示，里面的循环包含两个浮点运算，三个load操作，和一个store操作。问题在于，当发生的内存操作比计算更多时，如何从机器获得良好的性能。
 
