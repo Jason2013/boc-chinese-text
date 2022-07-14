@@ -9,7 +9,10 @@
 
 图2.1的样例是一个Fortran子函数。它找出矩阵中每列的最大的元素，同时保存这个最大元素的索引和绝对值。尽管它是用Fortran写的，选择什么源语言是不重要的。这个样例可以用任何常见的源语言编写。当然，有些优化的重要程度在不同的语言中是不一样的，但是所有语言都汇集到一组公共的特性，例如数组、指针、异常、函数等，它们在不同的语言中大同小异。然而，编译器必须很好地编译各个语言的特殊的特性。例如，C语言具有丰富的索引数组或者描述动态存储的指针构造，Fortran对形式参数具有特殊的规则，这些参数允许增强的优化。
 
-<2.1 Finding Largest Elements in a Column>
+.. figure:: chapter02/figure-2.1.png
+
+    Figure 2.1 Finding Largest Elements in a Column
+
 
 2.1 编译器结构概述
 ******************
@@ -63,9 +66,15 @@ COMPASS编译器引擎的经验告诉我们，一个操作计算得到的值必�
 
 现在，源程序被建模为一个有向图，其中的节点是block。如果存在一条可能的从第一个block到第二个block的路径，这两个block之间就有一条有向的边。一个唯一的节点称为Entry，代表源程序的入口点。在图中，入口节点没有前驱节点。类似地，一个唯一的节点称为Exit，代表源程序的出口点，这个节点没有后继节点。在图2.3中，入口节点是B0，出口节点是B5。
 
-<2.2 Operation Codes Used In Examples>
+.. figure:: chapter02/figure-2.2.png
 
-<2.3 Example Flow Graph>
+    Figure 2.2 Operation Codes Used In Examples
+
+
+.. figure:: chapter02/figure-2.3.png
+
+    Figure 2.3 Example Flow Graph
+
 
 源程序的执行被建模为穿越图的一条路径。这条路径从入口节点开始，到出口节点终止。按照路径上节点的出现次序，路径中的每个节点内的计算得到执行。事实上，路径中的下一个节点是由节点中的计算决定的。在图2.3中，一条可能的路径是B0，B1，B2，B4，B1，B3，B4，B5。这条执行路径意味着，执行B0内的所有计算，然后B1内的所有计算，然后B2，等等。注意，B1和B4内的计算被执行了两次。
 
@@ -80,7 +89,10 @@ COMPASS编译器引擎的经验告诉我们，一个操作计算得到的值必�
 
 支配者优化phase执行初步的全局优化。它可以识别如下情形：值是常量；两次计算会得出相同的值；指令不影响程序的结果。它识别并消除大部分冗余的计算。同时，它会再次应用已经在单个block内部执行的优化。它不会移动指令，从流图的一个点移动到另一个点。
 
-<2.4 Compiler Structure>
+.. figure:: chapter02/figure-2.4.png
+
+    Figure 2.4 Compiler Structure
+
 
 过程间优化phase分析当前流图中的过程调用和整个程序中所有其它过程的流图。它找出哪些变量可能被过程调用修改，哪些变量和表达式可能引用相同的内存位置，哪些参数是已知的常量。它保存这些信息，为其它phase所用。
 
@@ -109,7 +121,10 @@ list节点表示具有任意数量的子节点的节点，用在具有任意数�
 
 fetch节点区分地址和值。这个编译器作了一个统一的关于表达式的假设：表达式总是表示值。因此，assign节点以两个表达式作为操作数，一个代表位置的地址以接收结果，另一个代表赋值等式右边的值。fetch节点表示从地址获取值。它有一个参数，代表位置的地址。fetch节点的结果是存储在这个位置的值。
 
-<Figure 2.5 Abstract Syntax Tree for MAXCOL>
+.. figure:: chapter02/figure-2.5.png
+
+    Figure 2.5 Abstract Syntax Tree for MAXCOL
+
 
 注意，这个树结构表示了程序完整的结构，指示了子函数的哪些部分包含在别的部分中。
 
@@ -136,8 +151,14 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 如果有两个相同计算的实例，在它们之间没有操作修改它们的操作数，那么第二个计算实例是冗余的并且可以被删除，因为它计算得到的值总是跟第一个实例一样。
 
-<Figure 2.6 Initial Program Representation>
-<Figure 2.7 Initial Formal Temporary Table>
+.. figure:: chapter02/figure-2.6.png
+
+    Figure 2.6 Initial Program Representation
+
+.. figure:: chapter02/figure-2.7.png
+
+    Figure 2.7 Initial Formal Temporary Table
+
 
 可以应用代数恒等式消除操作。例如，A * 0可以被替换为0。只有当计算A的副作用可以被忽略时，才可以这样做。有大量的代数恒等式可以被应用；然而，其中的小部分总是被用起来了，而我们明白，当发现新的代数恒等式可以改进程序的时候，就可以把它们加进来。
 
@@ -156,7 +177,10 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 复制传播和值传播会被执行。如果X是Z的副本，那么对X的使用可以替换为对Z的使用，只要在发生复制的点和发生使用的点之间，X和Y都没有改变。这种转换可以改进编译器前端生成的程序流图。编译器会生成很多临时变量，例如循环计数，或数组附加信息的分量，它其实是复制操作。
 
-<Figure 2.8 Flow Graph after Simplifications>
+.. figure:: chapter02/figure-2.8.png
+
+    Figure 2.8 Flow Graph after Simplifications
+
 
 常量传播找出已经被赋以常量值的变量，并且把对它们的使用替换为这个常量本身。如果程序中的分支条件用到了常量，就可以决定并删除不会被执行的分支。
 
@@ -176,7 +200,10 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 大部分指令出现在哪里？它们在block B2中，计算一个地址，用于load数组元素。这些地址表达式在每次循环中都会改变，所以不能把它们移出由block B2开始的循环。它们有规律地改变，每次循环增加8，所以后面的全局优化phase将应用强度减弱来删除其中的大部分指令。
 
-<Figure 2.9 After Dominator Value Numbering>
+.. figure:: chapter02/figure-2.9.png
+
+    Figure 2.9 After Dominator Value Numbering
+
 
 2.5 过程间分析
 ******************
@@ -204,8 +231,14 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 当对内存的引用不能被完全消除的时候，基于相关性的优化可以被用来改善被引用的值处在高速缓存中的可能性，如此提高对内存的读取速率。现代处理器的速率超过了其内存系统的速率。为了补偿这种的差异，人们引入了高速缓存系统，它保存近期被引用的内存位置的值。近期被引用的内存有可能被再次引用，硬件可以快速地返回保存在高速缓存中的值，而不是再次从内存位置读取出来。
 
-<Figure 2.10 Example of Scalar Replacement>
-<Figure 2.11 Striding Down the Columns>
+.. figure:: chapter02/figure-2.10.png
+
+    Figure 2.10 Example of Scalar Replacement
+
+.. figure:: chapter02/figure-2.11.png
+
+    Figure 2.11 Striding Down the Columns
+
 
 考虑图2.11中的Fortran片段，它两次复制数组A到B。在Fortran中，列的元素被存储在内存中相邻次序的位置。当硬件读取一个特定的元素的时候，会向高速缓存读入一整个缓存线（cache line）（典型地，32字节到128字节），但是下一个元素是行中的下一个元素，它不在这个缓存线中；相反，它可能处在内存中很远的位置。当内层循环结束的时候，外层循环的下次迭代开始执行，当前高速缓存中的元素可能已经被剔除出去了。
 
@@ -213,7 +246,10 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 这个phase还会展开循环以改善以后的指令调度，如图2.12所示。左边的程序是原始的循环；右边的程序是展开的循环。在原始的循环中，编译器随后的phase将生成这样的指令，要求每次到B的store在每次后续迭代的从A的load之前执行。循环展开之后，从A的load可能和（到B的）store交错出现，隐藏了引用内存的时间。后面会执行另一个优化，称为软件流水线，它增加更多这样的指令交错。
 
-<Figure 2.12 Original (left) and Unrolled (right) Loop>
+.. figure:: chapter02/figure-2.12.png
+
+    Figure 2.12 Original (left) and Unrolled (right) Loop
+
 
 2.7 全局优化
 ******************
@@ -241,7 +277,10 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 图2.13中的代码表示了对内层循环应用了强度减弱之后的程序。T28不再表示一个纯的表达式：现在它是一个编译器创建的局部变量。这并没有改变编译器如何处理涉及T28的load和store操作。由于它和之前的纯表达式具有相同的值，load和store操作的副作用保存不变。
 
-<Figure 2.13 Strength-Reduction Inner Loop>
+.. figure:: chapter02/figure-2.13.png
+
+    Figure 2.13 Strength-Reduction Inner Loop
+
 
 在编译器粗略的模拟过程中，我们发现编译器需要在强度减弱之前执行或多或少的冗余表达式删除、常量传播和常量合并。把强度减弱（和表达式整形）当作之前讨论的基于支配者的优化的一部分来执行，可以让我们得到此信息。
 
@@ -261,9 +300,15 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 对两个循环都作了强度减弱之后，编译器得到了图2.15中的流图。
 
-<Figure 2.14 Header Block after Optimization>
+.. figure:: chapter02/figure-2.14.png
 
-<Figure 2.15 After Strength-Reducing Outer Loop>
+    Figure 2.14 Header Block after Optimization
+
+
+.. figure:: chapter02/figure-2.15.png
+
+    Figure 2.15 After Strength-Reducing Outer Loop
+
 
 检查流图，这个时刻正好。编译器已经创建了流图，简化了表达式，删除了大部分冗余表达式，应用了强度减弱，并执行了表达式整形。除了为强度减弱插入了一些专用的代码，没有移动任何表达式。代码移动将把代码移出循环。
 
@@ -277,11 +322,17 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 在这个特定的例子中，代码移动只移除了对常量4和8的冗余的load。对VALUE(I)的load被移出了内层循环。它不是循环不变量表达式，因为在循环中有一个对VALUE(I)的store操作。然而，一个store可以被视作一个store跟随一个load，load的结果寄存器和store的源寄存器相同，这个观点意味着，在使用VALUE(I)的每条路径上，都有一个VALUE(I)的load，使得循环中的load是冗余的。这时得到了图2.16中的代码。
 
-<Figure 2.16 After Code Motion>
+.. figure:: chapter02/figure-2.16.png
+
+    Figure 2.16 After Code Motion
+
 
 现在，利用部分冗余性，我们可以在反向程序流图上向前移动store操作，如图2.17所示。在循环中出现的到VALUE(I)和LARGE(I)的store可以被移动到block B4。虽然我们以为这是移出循环的一次移动，但是分析过程跟循环没有关系。这取决于这样的事实：在每条到达B4的路径上都出现了这些store操作，这些重复的store确实出现在循环内。以上处理结合死代码删除，给我们带来这些优化phase的最终结果。
 
-<Figure 2.17 After Store Motion>
+.. figure:: chapter02/figure-2.17.png
+
+    Figure 2.17 After Store Motion
+
 
 2.8 限制资源
 ******************
@@ -332,15 +383,24 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 * Spilling：限制资源phase会考虑寄存器压力超过物理寄存器数目的每个点。它会考虑包含那个点的每个封闭的循环，寻找一个临时变量，它在循环里面没有被使用，但是在后面被使用了（换句话说，它存放了一个跨越整个循环的值）。取一个对最外层循环具有以上属性的临时变量，在循环之前把它存储到内存，在循环之后在把它加载（reload）回来（在必要的地方）。这样，在循环内部的所有区域，寄存器压力减小1。如果没有这样的跨越循环的临时变量，就选择一个在那个点所在block没有被使用的临时变量。如果不存在这样的临时变量，就选择一个在这个block中被使用或定义的临时变量。这整个过程会被反复执行，直到在函数中的任何位置，寄存器压力都已经被减小到可用寄存器的数目以下。
 
-<Figure 2.18 After Code Lowering>
+.. figure:: chapter02/figure-2.18.png
 
-<Figure 2.19 Computing Right Number of Names>
+    Figure 2.18 After Code Lowering
+
+
+.. figure:: chapter02/figure-2.19.png
+
+    Figure 2.19 Computing Right Number of Names
+
 
 为了计算寄存器压力，编译器需要知道在流图的每个点，有哪些以后将被用到的临时变量，换句话说，程序中每个点的活跃的临时变量的集合。为了方便说明，每个临时变量活跃的点的集合被表示为一系列以两个数字表示的间隔，这些数字关联着图2.18中的每条指令。如果一个临时变量在间隔的第一条指令的开始处是活跃的，我们就用一个闭合的中括号表示它。如果它在一条指令的中间变得活跃了，我们就用一个开放得小括号表示它。图2.20显示了每个寄存器活跃的指令范围。
 
 利用这个信息，我们可以计算程序中每个点所需寄存器的数目，也就是寄存器压力。如果所需寄存器的数目超过了可用的物理寄存器的数目，就无法给所有临时变量分派寄存器。图2.21给出了在子函数中每条指令前后活跃的寄存器。在这个特别的例子中，最大的寄存器压力出现在最内层循环中。这常常是成立的，但并不总是这样。
 
-<Figure 2.20 Table of Live Ranges>
+.. figure:: chapter02/figure-2.20.png
+
+    Figure 2.20 Table of Live Ranges
+
 
 我们为每个寄存器集计算单独的寄存器压力：整数和浮点数。我们已经展示了整数寄存器的寄存器压力。图2.21没有给出浮点寄存器的寄存器压力，这样让这个表更容易理解；然而，程序中只有三个浮点寄存器，所以确定其寄存器压力是简单明了的。
 
@@ -348,13 +408,19 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 通常来说，小的流图不需要寄存器spilling。最大的寄存器压力比寄存器的数目小得多。但是，让我们假装机器只有8个寄存器。在内层循环的末尾，寄存器压力是9，在这个点有这么多活跃的符号化寄存器，我们无法把它们安置到可用的寄存器。在寄存器压力是9的这个点，符号化寄存器T1、T3、T4、T5、T6、T8、T14、T24和T28是活跃的；但是，T1、T3、T4、T5和T8在内层循环没有被引用（定义或使用）。因此，其中一个可以在循环前被挤出（spill），在循环后被再次加载进来。这样会让整个循环的寄存器压力减小1。理想地，我们会尽可能选择被最少嵌套循环引用的寄存器。但是，这些临时变量在下一层循环都被引用了，因此我们随意地选择存储T5，它是代表I的临时变量。
 
-<Figure 2.21 Live Registers and Register Pressure Before Instruction>
+.. figure:: chapter02/figure-2.21.png
+
+    Figure 2.21 Live Registers and Register Pressure Before Instruction
+
 
 我们利用堆栈（SP是一个专用的寄存器）将寄存器spill到内存。注意，寄存器压力在某个点达到了峰值，通过spill一个寄存器，我们减小了其它点处的寄存器压力。
 
 插入的过程需要两个步骤。首先，在最外层循环开始的地方插入一个store操作，在这个循环内临时变量（T5）没有被引用，然后在循环结束的地方插入load操作，如果这个临时变量在循环后面是活跃的。其次，优化load和store的位置，把load移动到尽量远离程序开始的地方，把store移动到尽量远离程序结尾的地方。这样我们得到了图2.22中的代码。
 
-<Figure 2.22 Load and Store Operations for Spill>
+.. figure:: chapter02/figure-2.22.png
+
+    Figure 2.22 Load and Store Operations for Spill
+
 
 在限制资源phase之后，编译器知道在程序流图的任意点其操作所引用的资源都是可用的。编译器剩余的phase都会保持这个不变属性，无论它们何时执行转换。
 
@@ -395,7 +461,10 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 注意，在代码的中间插入了若干NOP。机器一次挑选四条指令，它们对齐到16字节边界。在处理下一个packet之前，必须初始化当前packet中的所有四条指令。为了以最短的时间执行指令，我们必须最大化每个packet中不相关指令的数目。图2.23给出了指令调度的结果。
 
-<Figure 2.23 Scheduled Instructions>
+.. figure:: chapter02/figure-2.23.png
+
+    Figure 2.23 Scheduled Instructions
+
 
 2.10 寄存器分配
 ******************
@@ -418,17 +487,29 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 在临时变量的生命时间信息被计算出来之后，编译器用图着色算法处理在一些block的开始处活跃的临时变量，或者处理直接被分派物理寄存器的临时变量。被分派物理寄存器的临时变量是被预先分配的；然而，此处必须考虑它们以避免任何意外的分派。物理寄存器会被命名为$0、$1等。注意形式参数对应的临时变量被分派到由目标机器的调用标准指定的物理寄存器。图2.25列出了被全局分派的寄存器，连同寄存器的类别。在这个例子中，所有需要的寄存器被称为scratch寄存器，这意味着，如果寄存器在函数中被使用了，就不需要保存和恢复寄存器中的值。
 
-<Figure 2.24 Live Ranges after Scheduling>
+.. figure:: chapter02/figure-2.24.png
 
-<Figure 2.25 Global Register Assignments>
+    Figure 2.24 Live Ranges after Scheduling
+
+
+.. figure:: chapter02/figure-2.25.png
+
+    Figure 2.25 Global Register Assignments
+
 
 在所有block开始处活跃的寄存器被分配之后，我们可以分配只在单个block内部活跃的符号化寄存器。在这个小的样例中，只有几个。在实际的程序中，这些寄存器的数目比全局活跃寄存器的大得多。图2.26列出了这些局部寄存器。寄存器会尽可能地被重用，因为编译器希望最小化所用寄存器的数目。这避免了使用非scratch寄存器的必要性，否则就需要在函数开头插入store操作以保存它的值，在结尾插入load操作以恢复它的值。
 
 图2.27给出了结果汇编代码。所有临时变量都已经被替换为寄存器了。没有插入spill指令，因此指令序列没有改变。
 
-<Figure 2.26 Local Register Assignments>
+.. figure:: chapter02/figure-2.26.png
 
-<Figure 2.27 Code after Register Allocation>
+    Figure 2.26 Local Register Assignments
+
+
+.. figure:: chapter02/figure-2.27.png
+
+    Figure 2.27 Code after Register Allocation
+
 
 2.11 再次调度
 ******************
