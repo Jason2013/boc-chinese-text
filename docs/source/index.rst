@@ -11,6 +11,8 @@ Building an Optimizing Compiler（中文版）
 
 Bob Morgan 著
 
+潘立丰 陈畅 译
+
 
 
 .. toctree::
