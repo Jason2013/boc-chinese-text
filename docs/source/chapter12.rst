@@ -45,7 +45,10 @@ Trace调度器在一条简单路径上的block内重排指令。选择程序中�
 
 到此刻为止，我们忽略了执行指令所需的时间和处理器发出指令的方式。指令调度phase重排指令以避免停顿。图12.1的Alpha指令序列计算表达式A = (B + C) + D * E，如果按照源语言所描述的次序执行指令，就会浪费两个周期。初始的load操作需要两个周期，从数据缓存中获取数据。可以利用这些周期执行后面的load操作，允许load和后续的乘法和加法重叠。
 
-Figure 12.1 Instructions Before (left) and After (right) Scheduling
+.. figure:: chapter12/figure-12.1.png
+
+    Figure 12.1 Instructions Before (left) and After (right) Scheduling
+
 
 图12.1间接显示出三个顾虑。首先，原本的指令序列只用三个寄存器就可以执行。重排后的序列需要四个寄存器。重排指令可能增加所需寄存器的数目，让寄存器分配更困难。也有这样的情形，指令调度减小了所需寄存器的数目；但是，这很少见。总的来说，指令调度让寄存器分配更困难。
 
@@ -77,7 +80,10 @@ Figure 12.1 Instructions Before (left) and After (right) Scheduling
 
 指令调度发生在临时变量被绑定物理寄存器之前，前后移动指令的自由度相对更大。这可能会增加程序中每个点的活跃寄存器的数目。因此，必须约束调度器，在程序中的每个点，不让所需寄存器的数目增加到超过可用寄存器的数目。如果这对指令调度器限制得太多，我们将改变限制资源phase，进一步减小寄存器压力。当我们测试真实程序时，可以实验性地做这件事。
 
-Figure 12.2 Sequence of Phases Involving Scheduling
+.. figure:: chapter12/figure-12.2.png
+
+    Figure 12.2 Sequence of Phases Involving Scheduling
+
 
 指令调度可以为窥孔优化创造机会。对于访问相同位置的load和store操作，它可以移动它们，让它们相邻。因此，当调度器调度指令的时候，它必须准备好作一些形式受限的窥孔优化。执行寄存器分配之后，可以再次调用指令调度器，如果寄存器分配器生成了新的指令。如果分配寄存器的时候没有发生寄存器挤出（spilling），就没有必要执行第二次指令调度。
 
@@ -92,17 +98,32 @@ Figure 12.2 Sequence of Phases Involving Scheduling
 
 图12.5的例子有两个用途。编译器会软件流水线化这个循环，重叠多次迭代的执行。除了展示软件流水线，我们会用这个例子说明编译器将如何编译一个未作软件流水线化的循环。这样的循环可能会被展开，为了增加可以调度的指令。
 
-Figure 12.3 Inner Loop of Example
+.. figure:: chapter12/figure-12.3.png
 
-Figure 12.4 Instructions in the inner Loop
+    Figure 12.3 Inner Loop of Example
 
-Figure 12.5 Vectorizable Loop
+
+.. figure:: chapter12/figure-12.4.png
+
+    Figure 12.4 Instructions in the inner Loop
+
+
+.. figure:: chapter12/figure-12.5.png
+
+    Figure 12.5 Vectorizable Loop
+
 
 图12.6给出了循环被软件流水线化时前面的编译器phase产生的指令。循环体包含一次循环迭代的指令。图12.7给出了假设循环不会被软件流水线化时所生成的指令。循环按照四次被展开，于是有些计算可以重叠。在这个例子中，编译器可能实际上按照四次以上展开循环；但是，作为一个例子，展开得更多没有意义。
 
-Figure 12.6 Instructions for Vectorizable Loop
+.. figure:: chapter12/figure-12.6.png
 
-Figure 12.7 Unrolled Loop
+    Figure 12.6 Instructions for Vectorizable Loop
+
+
+.. figure:: chapter12/figure-12.7.png
+
+    Figure 12.7 Unrolled Loop
+
 
 在描述调度算法本身之前，我们来讨论五个话题，它们构成了调度的基础：
 
@@ -163,7 +184,10 @@ Freudenberger, Gross和Lowney（1994）注意到，如果选择这样一个trace
 
 给定这些条件，计算trace的算法是简单明了的，如图12.8所示。构造一个按执行频率排序的block优先级队列。利用这个队列找出trace的锚点，然后依照上面提到的规则扩展它。向后扫描，包含支配者节点，直到必须停止trace。这给出了入口点。现在从锚点开始向前扫描，包含扩展的block的一条路径，或者一个后支配者节点。这些规则是灵活的。trace的最优选择取决于用户的编程风格和源语言的最优编程风格，因此准备好修改此代码，以满足这些需求。
 
-<Figure 12.8 Calculating Traces>
+.. figure:: chapter12/figure-12.8.png
+
+    Figure 12.8 Calculating Traces
+
 
 编译器需要一种命名trace的方法。编译器把trace的入口block用作名字。每个block有一个属性trace(B)，它要么是NULL，由于block还未插入到一个trace，要么是trace的入口block。有了这个属性，就能轻松找出trace中的所有block。trace由一组block组成，它们构成支配者树中的从trace入口block开始的一条路径。简单地向下扫描这棵树，查看每个孩子节点。如果一个孩子节点的属性值和trace相同，那么trace包含这个孩子。如果没有孩子节点的属性值和它的父亲节点相同，那么trace终止了。
 
@@ -171,9 +195,15 @@ Freudenberger, Gross和Lowney（1994）注意到，如果选择这样一个trace
 
 图12.9给出了将锚点的支配者添加到trace的决定过程。任意支配者（编译器必须在树的根停下来），如果它们不在trace中，就添加它们。如果trace太长了，就终止它。编译器还要检查支配者是否在一个循环中，而这个循环不直接或间接包含锚点。支配者位于外层循环是适合的，而位于不直接或间接包含锚点的循环是不适合的。
 
-<Figure 12.9 Determining Whether Dominators Can Be Added to a Trace>
+.. figure:: chapter12/figure-12.9.png
 
-<Figure 12.10 Determining Whether a Successor Can Be Added to a Trace>
+    Figure 12.9 Determining Whether Dominators Can Be Added to a Trace
+
+
+.. figure:: chapter12/figure-12.10.png
+
+    Figure 12.10 Determining Whether a Successor Can Be Added to a Trace
+
 
 图12.10的算法用于扩展trace，从锚点开始扩展为扩展的block。找到一个后继节点，它只有一个前驱节点。选择执行频率最高的后继节点，它就是下一个添加到trace的block。
 
@@ -207,7 +237,10 @@ Freudenberger, Gross和Lowney（1994）注意到，如果选择这样一个trace
 
 在图12.11中，IDEFS(B4)包括T2和T3，但是不包括T1和T4。它包括T2和T3，因为它们是在从B1到B4的路径上被定义的，而B1是B4的直接支配者。
 
-<Figure 12.11 Flow Graph for IDEFS Compuation>
+.. figure:: chapter12/figure-12.11.png
+
+    Figure 12.11 Flow Graph for IDEFS Compuation
+
 
 除了定义，使用也存在类似的信息集合。思想是相同的，后面我们会看到的计算方法也是相同的。唯一不同的是，被检测的是作为操作数的临时变量和变量的使用，而不是指令的结果。
 
@@ -241,11 +274,17 @@ DEFS(P0, Pr) = IDEFS(Pr) . IDEFS(Pi) . OUT(Pi)
 
 由于一条路径可以经过强连通区域任意次，一个强连通区域的作用是其中的block的作用的联合。对于单个block，前驱节点和当前block之间没有作用。已经计算了概要的作用，此信息被添加到已经为前驱节点计算的信息中，以指示在这样的路径上可以计算什么，即从直接支配节点开始穿过一个它的后继节点的路径，这个后继节点也是当前节点的一个孩子（或根）。然后，此信息被添加到支配者树以存储结果。
 
-<Figure 12.12 Algorithm for IDEFS>
+.. figure:: chapter12/figure-12.12.png
+
+    Figure 12.12 Algorithm for IDEFS
+
 
 图12.13给出了实现UNION/FIND和EVAL所需的支持函数。因为文献中几乎不使用EVAL操作，所以把它们包括进来了。实现它们需要两个属性。DEFS表示在父节点和孩子节点之间被改变的临时变量的集合；此信息存储在孩子节点那里。FindParent给出一个block的父节点。如果它是空，那么这是当前树的根。
 
-<Figure 12.13 Algorithms for UNION/FIND/EVAL>
+.. figure:: chapter12/figure-12.13.png
+
+    Figure 12.13 Algorithms for UNION/FIND/EVAL
+
 
 初始化简单地将所有FindParent属性设置为空。DEFS属性不需要初始化，因为它只有在被设置之后才会被使用。FIND操作向上遍历树，找出树的根。此事一旦发生，就利用折叠函数折叠这棵树，以缩短将来的遍历过程。
 
@@ -268,7 +307,10 @@ EVAL操作利用FIND找出根节点。此时会发生一次折叠（在FIND中�
 
 [3 注意我说了”用到的“而非”需要的“。不构建干涉图而作指令调度是可能的。反过来，跟踪指令计算操作数，跟踪它们的位置，这样可以隐式地构建干涉图。构建干涉图会更容易更有效，尽管它消耗时间和空间。]
 
-<Figure 12.14 Computing the Interference Graph>
+.. figure:: chapter12/figure-12.14.png
+
+    Figure 12.14 Computing the Interference Graph
+
 
 | **定义**
 | *干涉图：*
@@ -348,7 +390,10 @@ priority(J) = max {delay(J, I) + priority(I) | I ∈ Succ(J)}
 
 图12.15描述了这个算法。它是前面的讨论的一个直接的实现。这个算法的形式是一个深度优先搜索，先处理后继节点，再处理当前节点。利用我们讨论过的方法计算到达block末尾所需的最长时间。如果有其它应该包括的信息，也可以添加到这个算法中。
 
-Figure 12.15 Computing Instruction Priority
+.. figure:: chapter12/figure-12.15.png
+
+    Figure 12.15 Computing Instruction Priority
+
 
 
 12.8 模拟硬件
@@ -420,7 +465,10 @@ Table 12.7 Machine State at Start of Next Cycle
 
 针对有些调度优化和软件流水线，编译器有时想要向后扫描指令，为了向一个已调度列表插入指令。记录在资源矩阵中的机器状态和我们刚刚计算得到的状态告诉我们，是否存在一个空的位置，在那里可以插入一条指令。它并没有告诉我们，在那里插入一条指令是否会干涉后面某条已经被调度的指令。为此，我们需要反向有限状态机。
 
-Figure 12.16 Generating State Machine
+.. figure:: chapter12/figure-12.16.png
+
+    Figure 12.16 Generating State Machine
+
 
 考虑相同的状态集合，但是按照反方向构建转移。这样我们得到一个十足的非确定性有限状态机，由此我们可以构建一个确定性有限状态机。调度一个block之后，我们对block运行反向状态机，赋予每条指令一对状态数字。前向状态数字指示将来可以出现的合法指令，后向状态数字指示过去可以出现的合法指令。
 
@@ -449,7 +497,10 @@ Figure 12.16 Generating State Machine
 
 图12.17给出的伪代码概述了这个插入算法。它详细描述了上面的讨论。如果指令无法插入，就返回false。反之，插入指令并更新状态。
 
-Figure 12.17 Inserting Instructions in Slots
+.. figure:: chapter12/figure-12.17.png
+
+    Figure 12.17 Inserting Instructions in Slots
+
 
 12.9
 ********************
