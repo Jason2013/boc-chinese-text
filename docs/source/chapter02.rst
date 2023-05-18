@@ -522,3 +522,18 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 *********************
 
 最后，我们接近完成任务了。指令已经选择出来了；寄存器已经分派好了。剩余的任务是琐碎的，就是将这些信息和全局分配的数据信息翻译为目标对象模块。这项任务包括为调试器插入调试信息。由于我们的任务是漫长的，在此对最后这个phase点到为止。它涉及一点点错综复杂的技术。然而，它之所以复杂，是因为目标对象模块的结构是复杂的并且是无文档的。所有我看过的描述目标对象格式的文档都包含严重的错误。因此，这个项目涉及计算机科学试错，以确定链接器想要什么。这个phase还会为报表档案产生汇编语言清单，如果要求的话。
+
+2.13 参考文献
+************
+
+Allen, R., and K. Kennedy. “;Advanced compilation for vector and parallel computers. San Mateo, CA: Morgan Kaufmann. 
+
+Frazer, C. W., and D. R. Hanson. 1995. A retargetable C compiler: Design and implementation. Redwood City, CA: Benjamin/Cummings. 
+
+Hendron, L. J., G. R. Gao, E. Altman, and C. Mukerji. 1993. A register allocation framework based on hierarchical cyclic interval graphs. (Technical report.) McGill University. 
+
+Hendron, L. J., G. R. Gao, E. Altman, and C. Mukerji. 1993. Register allocation using cyclic interval graphs: A new approach to an old problem. (Technical report.) McGill University. 
+
+Morel, E., and C. Renvoise. 1979. Global optimization by suppression of partial redundancies. Communications of the ACM 22(2): 96-103. 
+
+Wolfe, M. 1996. High performance compilers for parallel computing. Reading, MA: Addison-Wesley.
