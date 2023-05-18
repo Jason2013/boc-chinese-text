@@ -120,7 +120,7 @@ Ken Kennedy，纽约大学（NYU）的一个学生，在莱斯（Rice）大学�
 图1.4是一个递归式的二分查找算法。学生可能会将它翻译为用指针操作二叉树的过程。此处的挑战是，如何优化内存访问，如何降低过程调用带来的时间消耗。我建议将课程的主要评分和项目关联起来，项目的内容是设计几个优化算法的原型。原型可以被快速地实现，审阅者也按照原型的标准去考察它。作为原型，不需要处理复杂的内存管理问题，而实际的优化编译器会遇到这样的问题。
 
 1.8 参考文献
-***********
+************
 
 Auslander, M., and M. Hopkins. 1982. An overview of the PL.8 compiler. Proceeding of the ACN SIGPLAN82 Conference on Programming Language Design and Implementation, Boston, MA. Backus, J. W., et al. 1957. The Fortran automatic coding system. Proceedings of AFIPS 1957 Western Joint Computing Conference (WJCC), 188-198. 
 
