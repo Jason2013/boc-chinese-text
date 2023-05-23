@@ -267,3 +267,15 @@ Briggs和Chaitin都在一个循环中重复寄存器分配，直到所有临时�
 
     Figure 13.17 Spilling within the Block
 
+13.3 参考文献
+*************
+
+Briggs, P., K. D. Cooper, and L. Torczon. 1992. Coloring register pairs. ACM Letters on Programming Languages and Systems 1(1): 3-13. 
+
+Briggs, P., K. D. Cooper, and L. Torczon. 1994. Improvements to graph coloring register allocation. ACM Transactions on Programming Languages and Systems 16(3): 428-455. 
+
+Chaitin, G. J. 1982. Register allocation and spilling via graph coloring. Proceedings of the SIGPLAN ‘82 Symposium on Compiler Construction, Boston, MA. Published as SIGPLAN Notices 17(6): 98-105. 
+
+Chaitin, G. J., et al. 1981. Register allocation via coloring. Computer Languages 6(1): 47-57. 
+
+Hendron, L. J., G. R. Gao, E. Altman, and C. Mukerji. 1993. Register allocation using cyclic interval graphs: A new approach to old problem.(Technical report.) McGill University.
