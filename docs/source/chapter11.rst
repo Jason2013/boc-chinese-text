@@ -492,3 +492,10 @@ STORE_EARLIEST的计算利用了EARLIEST方程，将存储操作的预期集合�
 哪些指令杀死一个LOAD指令？临时变量的一次使用或求值杀死一个LOAD指令。使用会杀死它，因为越过这个使用移动LOAD将破坏这个使用的值。临时变量的求值会杀死它，因为它会生成一个值，它不同于内存中的值。
 
 到出口的一些路径可能不再使用临时变量T，这时可以进一步优化。如果在插入LOAD指令的点T不活跃，就可以取消这次插入。
+
+11.9 参考文献
+*************
+
+Chaitin, G. J., et al. 1981. Register allocation via coloring. Computer Languages 6(1):47-57. 
+
+Leverett, B. W., et al. 1979. An overview of the Production-Quality Compiler-Compiler project. (Technical Report CMU-CS-79-105.) Pittsburgh, PA: Carnegie Mellon University. 
