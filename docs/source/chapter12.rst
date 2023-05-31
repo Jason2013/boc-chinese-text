@@ -516,27 +516,37 @@ Table 12.7 Machine State at Start of Next Cycle
 
 如之前提到的那样，本调度器使用这样一个概念，就是基于支配者树的trace。第一件要做的事情是计算辅助信息：trace，IDEFS，和IUSE集合。然后开始遍历支配者树，如图12.18描述的那样。它的基本结构是这样的，选择一个trace，调度它，然后从trace中的block出发向下走，针对不在trace中的别的子节点执行一个trace。与此同时，我们利用对支配者树的值编号来跟踪已经被调度的指令。用操作码（opcode）和操作数的值编号去索引值表。当一个临时变量被修改时，要么是表迎来了新的操作码和操作数，要么迎来了非已知的指令，但是有一个新的值编号（来自IDEFS计算）。
 
-Figure 12.18 Driver for the Scheduler
+.. figure:: chapter12/figure-12.18.png
 
-Figure 12.19 Example of Hoistable Instruction
+    图12.18 Driver for the Scheduler
+
+.. figure:: chapter12/figure-12.19.png
+
+    图12.19 Example of Hoistable Instruction
 
 这里为什么使用值编号？所有冗余表达式不是被消除了吗？不是！指令调度可能引入冗余的表达式。考虑图12.19中的源语句。如果其中一个分支和开头的条件表达式属于同一个trace，那么相当有可能A*B会被调度到条件转移之前。于是，它在别的trace的开头是可用的。
 
 图12.20给出了遍历支配者树的实际算法。首先确定trace，如之前描述的那样。它以一个block为开头，Trace(B)=B。在支配者树中最多一个子节点具有相同的trace的值，沿着树向下走，直到不存在子节点具有trace的B的值。然后调用SchedulePackets以调度这个trace。调度trace之后，一次跟踪一条指令，将指令输入值表。当到达一个block的边界时，接着处理trace中的子节点；但是，得在那之前调度每个其它子节点的指令，因为这样的block肯定是一个trace的开头。
 
-Figure 12.20 Determining the Trace and Walking It
+.. figure:: chapter12/figure-12.20.png
+
+    图12.20 Determining the Trace and Walking It
 
 图12.21开始真正的工作。SchedulePackets（注意复数形式）首先计算干涉图。这时，初始化属性Ready(I)和PredLeft(I)，前者是指令可以被调度而不造成停顿的第一个时钟周期，后者是还没有被调度的前驱节点的数目。PredLeft(I)是许多拓扑排序算法用到的属性，用以控制拓扑排序。总之，指令调度是干涉图的拓扑排序。Ready(I)是操作数可用的最大次数。指令被调度，且指令对所关联的延迟已经发生，这时其操作数是可用的。由于它是一个最大值，我们把Ready(I)初始化为0，每当我们发现一个给出更大值的操作数，就增加它。
 
 在调度指令之前，算法会检查冲突图根节点处的指令是否在trace之外可用。如果是，就用一个COPY指令替换它。我们想做得更好，但是这里存在一个phase次序问题。寄存器合并（coalescing）已经发生了。我们试图让寄存器分配器为它们分配相同的寄存器；但是，这无法保证，因此必须使用复制指令，它会阻止其它优化。
 
-Figure 12.21 Starting Trace and Scheduling Packets
+.. figure:: chapter12/figure-12.21.png
+
+    图12.21 Starting Trace and Scheduling Packets
 
 集合Ready包含所有在这个周期就可以调度而无需延迟的指令。集合Available包含在这个周期或将来某个周期可调度的指令。换句话说，和那个集合中的成员相干涉的所有指令已经被调度了。为了计算这个集合，我们为每条指令记录一个属性，称为PredLeft(I)，它是冲突图中还没有被调度的前驱节点的数目。当这个属性变为0时，指令被添加到Available集合。
 
 有了以上这些设施，图12.22中的Schedule Packet程序从Ready选择可调度的指令。首先选择最重要的指令，只选择那些和已经调度的指令不相冲突的指令。所有指令被调度之后，Available集合得到更新。packet中一条指令的每个后继节点的PredLeft属性被减小。当它变为0时，其指令被添加到Available集合中。
 
-Figure 12.21 Starting Trace and Scheduling Packets
+.. figure:: chapter12/figure-12.22.png
+
+    图12.22 Scheduling a Packet
 
 什么是Schedule_Importance？它决定Ready集合中哪些指令首先被调度。它对Ready集合中的指令作lexographic排序，它的思想基于Warren（1990）描述的RS600指令调度器。针对每个主要的功能单元，指令被分别排序，按照下面的次序。
 
@@ -587,7 +597,9 @@ Figure 12.21 Starting Trace and Scheduling Packets
 
 软件流水线化的循环是重要的概念。循环的多次迭代相互交叠。第一次穿过软件流水线化的循环时，编译器完成第一次迭代的最后一条指令，完成第二次迭代的前部指令，等等。处理下一个迭代时，第一个迭代已经完成。第二次迭代所执行的指令，和之前循环体执行期间的第一次迭代相同，除了它们是为了后面的迭代。
 
-Figure 12.23 Schematic of Pipelined Loop
+.. figure:: chapter12/figure-12.23.png
+
+    图12.23 Schematic of Pipelined Loop
 
 软件流水线化的循环包含循环多次迭代的指令。我们稍后会讨论怎么知道迭代的数目。也会按某种程度展开循环，重命名临时变量，使得物理寄存器被正确使用。重要的是，原始循环中的每条指令在软件流水线化的循环中出现一次（如果循环被展开了，那么每条指令出现的次数是循环展开的次数）。
 
@@ -597,7 +609,9 @@ Figure 12.23 Schematic of Pipelined Loop
 
 如果原始循环的迭代数目足够小，软件流水线就没有优势。事实上，这让实现软件流水线更困难。如果循环的迭代数目是某个数字的倍数（后面再说怎么确定这个数字），那么实现软件流水线也会更简单。生成循环的两个副本，这样可以结合以上两个认知：一个是一模一样的副本，另一个是软件流水线化的副本。编译器如图12.24所示那样处理代码。在构建软件流水线化的循环期间决定常数D和常数S，前者是软件流水线之前的迭代次数，后者表示循环的迭代次数。
 
-Figure 12.23 Schematic of Pipelined Loop
+.. figure:: chapter12/figure-12.24.png
+
+    图12.24 Combining Unrolling and Start
 
 编译器必须生成序曲（prologue）、尾声（epilogue）和软件流水线化的循环。实际上，首先会生成软件流水线化的循环，而所有其它的计算由循环决定。具体过程如下：
 
