@@ -49,7 +49,7 @@ Trace调度器在一条简单路径上的block内重排指令。选择程序中�
 
 .. figure:: chapter12/figure-12.1.png
 
-    Figure 12.1 Instructions Before (left) and After (right) Scheduling
+    图12.1 Instructions Before (left) and After (right) Scheduling
 
 
 图12.1间接显示出三个顾虑。首先，原本的指令序列只用三个寄存器就可以执行。重排后的序列需要四个寄存器。重排指令可能增加所需寄存器的数目，让寄存器分配更困难。也有这样的情形，指令调度减小了所需寄存器的数目；但是，这很少见。总的来说，指令调度让寄存器分配更困难。
@@ -84,7 +84,7 @@ Trace调度器在一条简单路径上的block内重排指令。选择程序中�
 
 .. figure:: chapter12/figure-12.2.png
 
-    Figure 12.2 Sequence of Phases Involving Scheduling
+    图12.2 Sequence of Phases Involving Scheduling
 
 
 指令调度可以为窥孔优化创造机会。对于访问相同位置的load和store操作，它可以移动它们，让它们相邻。因此，当调度器调度指令的时候，它必须准备好作一些形式受限的窥孔优化。执行寄存器分配之后，可以再次调用指令调度器，如果寄存器分配器生成了新的指令。如果分配寄存器的时候没有发生寄存器挤出（spilling），就没有必要执行第二次指令调度。
@@ -104,29 +104,29 @@ Trace调度器在一条简单路径上的block内重排指令。选择程序中�
 
 .. figure:: chapter12/figure-12.3.png
 
-    Figure 12.3 Inner Loop of Example
+    图12.3 Inner Loop of Example
 
 
 .. figure:: chapter12/figure-12.4.png
 
-    Figure 12.4 Instructions in the inner Loop
+    图12.4 Instructions in the inner Loop
 
 
 .. figure:: chapter12/figure-12.5.png
 
-    Figure 12.5 Vectorizable Loop
+    图12.5 Vectorizable Loop
 
 
 图12.6给出了循环被软件流水线化时前面的编译器phase产生的指令。循环体包含一次循环迭代的指令。图12.7给出了假设循环不会被软件流水线化时所生成的指令。循环按照四次被展开，于是有些计算可以重叠。在这个例子中，编译器可能实际上按照四次以上展开循环；但是，作为一个例子，展开得更多没有意义。
 
 .. figure:: chapter12/figure-12.6.png
 
-    Figure 12.6 Instructions for Vectorizable Loop
+    图12.6 Instructions for Vectorizable Loop
 
 
 .. figure:: chapter12/figure-12.7.png
 
-    Figure 12.7 Unrolled Loop
+    图12.7 Unrolled Loop
 
 
 在描述调度算法本身之前，我们来讨论五个话题，它们构成了调度的基础：
@@ -190,7 +190,7 @@ Freudenberger, Gross和Lowney（1994）注意到，如果选择这样一个trace
 
 .. figure:: chapter12/figure-12.8.png
 
-    Figure 12.8 Calculating Traces
+    图12.8 Calculating Traces
 
 
 编译器需要一种命名trace的方法。编译器把trace的入口block用作名字。每个block有一个属性trace(B)，它要么是NULL，由于block还未插入到一个trace，要么是trace的入口block。有了这个属性，就能轻松找出trace中的所有block。trace由一组block组成，它们构成支配者树中的从trace入口block开始的一条路径。简单地向下扫描这棵树，查看每个孩子节点。如果一个孩子节点的属性值和trace相同，那么trace包含这个孩子。如果没有孩子节点的属性值和它的父亲节点相同，那么trace终止了。
@@ -201,12 +201,12 @@ Freudenberger, Gross和Lowney（1994）注意到，如果选择这样一个trace
 
 .. figure:: chapter12/figure-12.9.png
 
-    Figure 12.9 Determining Whether Dominators Can Be Added to a Trace
+    图12.9 Determining Whether Dominators Can Be Added to a Trace
 
 
 .. figure:: chapter12/figure-12.10.png
 
-    Figure 12.10 Determining Whether a Successor Can Be Added to a Trace
+    图12.10 Determining Whether a Successor Can Be Added to a Trace
 
 
 图12.10的算法用于扩展trace，从锚点开始扩展为扩展的block。找到一个后继节点，它只有一个前驱节点。选择执行频率最高的后继节点，它就是下一个添加到trace的block。
@@ -243,7 +243,7 @@ Freudenberger, Gross和Lowney（1994）注意到，如果选择这样一个trace
 
 .. figure:: chapter12/figure-12.11.png
 
-    Figure 12.11 Flow Graph for IDEFS Compuation
+    图12.11 Flow Graph for IDEFS Compuation
 
 
 除了定义，使用也存在类似的信息集合。思想是相同的，后面我们会看到的计算方法也是相同的。唯一不同的是，被检测的是作为操作数的临时变量和变量的使用，而不是指令的结果。
@@ -280,14 +280,14 @@ DEFS(P0, Pr) = IDEFS(Pr) . IDEFS(Pi) . OUT(Pi)
 
 .. figure:: chapter12/figure-12.12.png
 
-    Figure 12.12 Algorithm for IDEFS
+    图12.12 Algorithm for IDEFS
 
 
 图12.13给出了实现UNION/FIND和EVAL所需的支持函数。因为文献中几乎不使用EVAL操作，所以把它们包括进来了。实现它们需要两个属性。DEFS表示在父节点和孩子节点之间被改变的临时变量的集合；此信息存储在孩子节点那里。FindParent给出一个block的父节点。如果它是空，那么这是当前树的根。
 
 .. figure:: chapter12/figure-12.13.png
 
-    Figure 12.13 Algorithms for UNION/FIND/EVAL
+    图12.13 Algorithms for UNION/FIND/EVAL
 
 
 初始化简单地将所有FindParent属性设置为空。DEFS属性不需要初始化，因为它只有在被设置之后才会被使用。FIND操作向上遍历树，找出树的根。此事一旦发生，就利用折叠函数折叠这棵树，以缩短将来的遍历过程。
@@ -315,7 +315,7 @@ EVAL操作利用FIND找出根节点。此时会发生一次折叠（在FIND中�
 
 .. figure:: chapter12/figure-12.14.png
 
-    Figure 12.14 Computing the Interference Graph
+    图12.14 Computing the Interference Graph
 
 
 | **定义**
@@ -398,7 +398,7 @@ priority(J) = max {delay(J, I) + priority(I) | I ∈ Succ(J)}
 
 .. figure:: chapter12/figure-12.15.png
 
-    Figure 12.15 Computing Instruction Priority
+    图12.15 Computing Instruction Priority
 
 
 
@@ -473,7 +473,7 @@ Table 12.7 Machine State at Start of Next Cycle
 
 .. figure:: chapter12/figure-12.16.png
 
-    Figure 12.16 Generating State Machine
+    图12.16 Generating State Machine
 
 
 考虑相同的状态集合，但是按照反方向构建转移。这样我们得到一个十足的非确定性有限状态机，由此我们可以构建一个确定性有限状态机。调度一个block之后，我们对block运行反向状态机，赋予每条指令一对状态数字。前向状态数字指示将来可以出现的合法指令，后向状态数字指示过去可以出现的合法指令。
@@ -505,7 +505,7 @@ Table 12.7 Machine State at Start of Next Cycle
 
 .. figure:: chapter12/figure-12.17.png
 
-    Figure 12.17 Inserting Instructions in Slots
+    图12.17 Inserting Instructions in Slots
 
 12.9 调度算法
 **************
