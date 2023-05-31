@@ -24,7 +24,7 @@
 
 .. figure:: chapter11/figure-11.1.png
 
-    Figure 11.1 Back-End Structure
+    图11.1 Back-End Structure
 
 寄存器分配phase必须高效地利用机器资源。这意味着使用尽量少的寄存器。当寄存器不够用的时候，寄存器分配器插入尽量少的load和store操作。使用最少的寄存器并且插入最少的load和store操作是不切实际的，因为这个问题是NP完全问题。作为替代，我们会使用启发式方法尽可能做好工作。
 
@@ -51,11 +51,11 @@
 
 .. figure:: chapter11/figure-11.2.png
 
-    Figure 11.2 LIMIT Main Procedure
+    图11.2 LIMIT Main Procedure
 
 .. figure:: chapter11/figure-11.3.png
 
-    Figure 11.3 Effect of Abnormal Edges
+    图11.3 Effect of Abnormal Edges
 
 必须删除所有非正常边上由phi节点导致的复制。因此，对于这些phi节点中的临时变量，什么也做不了。通过不改变求值或使用的点来实现它。实际上，使用可以被删除，但不能被增加。为了找出这些临时变量，执行图11.3中的算法，它计算两个集合：Occurs_In_Abnormal_ϕ_node，这是这些边所包含的所有临时变量的集合；Pairs_In_AbnormaL_ϕ_node，这是临时变量对的集合，如果编译器不仔细就可能导致它们之间的复制。这个算法简单地查看所有包含任何ϕ节点的block，考虑每个前驱block，检查它是否由非正常边形成的。如果是的话，扫描ϕ节点的每个临时变量，生成这些集合。
 
@@ -75,7 +75,7 @@
 
 .. figure:: chapter11/figure-11.4.png
 
-    Figure 11.4 Driver for Peephole Optimization
+    图11.4 Driver for Peephole Optimization
 
 正常来说，窥孔优化按照执行顺序逐条扫描每个block中的指令。本编译器按照流图的支配者线路访问每个block和其中的指令。这意味着每个操作数在其它指令使用它们之前已经被求值。当然，对于ϕ节点是不成立的。对这种情况，编译器必须作最坏的假设：它不知道临时变量的值。对于其它临时变量，编译器记录如下信息：
 
@@ -92,7 +92,7 @@
 
 .. figure:: chapter11/figure-11.5.png
 
-    Figure 11.5 Peephole Optimization of a Block
+    图11.5 Peephole Optimization of a Block
 
 处理了ϕ节点之后，编译器模拟block的执行。在这个过程中，对于列表中的每条指令，调用窥孔优化函数。这个函数会执行任意转换。如果一个转换发生了，就返回值真。下面是窥孔优化的诀窍。如果没有发生转换，编译器会继续处理下一条指令。如果发生了转换，编译器会再次处理被转换的指令，现在这条指令可能不同于原始的指令。必须小心从事，避免跳过一条指令，试图再次处理删除的指令，或者发生通常的崩溃。
 
@@ -117,15 +117,15 @@
 
 .. figure:: chapter11/figure-11.6.png
 
-    Figure 11.6 Peephole Optimizing ϕ-nodes
+    图11.6 Peephole Optimizing ϕ-nodes
 
 .. figure:: chapter11/figure-11.7.png
 
-    Figure 11.7 Peephole Optimization for Integer Multiplication
+    图11.7 Peephole Optimization for Integer Multiplication
 
 .. figure:: chapter11/figure-11.8.png
 
-    Figure 11.8 Peephole Optimizing Copy Operations
+    图11.8 Peephole Optimizing Copy Operations
 
 11.3 计算冲突图
 ******************
@@ -179,11 +179,11 @@
 
 .. figure:: chapter11/figure-11.9.png
 
-    Figure 11.9 Structure of a Conflict Entry
+    图11.9 Structure of a Conflict Entry
 
 .. figure:: chapter11/figure-11.10.png
 
-    Figure 11.10 Schema for Referencing Neighbors of Ti
+    图11.10 Schema for Referencing Neighbors of Ti
 
 在插入边的时候，新的边被添加到链表的头部，因为局部性表明，一旦发生了一次插入，很可能很快会尝试相同的插入。
 
@@ -236,7 +236,7 @@
 
 .. figure:: chapter11/figure-11.12.png
 
-    Figure 11.12 Example Conflict Graph
+    图11.12 Example Conflict Graph
 
 11.4 结合的寄存器重命名和寄存器合并
 ***********************************
@@ -278,13 +278,13 @@ SSA形式的寄存器重命名算法会在流图中生成非正常边关联的ϕ
 
 .. figure:: chapter11/figure-11.14.png
 
-    Figure 11.14 Walking the Graph and Checking Coalescing
+    图11.14 Walking the Graph and Checking Coalescing
 
 最后，图11.15中的CHECK_COALESCE作真正的事情。分组的冲突信息存储为临时变量代表的冲突信息，因此首先找出临时变量代表。如果它们是相同的代表，那么临时变量已经被直接或间接地合并了。其次，检查它们是否冲突。如果是冲突的，就不做什么；否则，用UNION方法合并这两个分组，将原来分组的冲突信息的联合赋予新的临时变量代表。
 
 .. figure:: chapter11/figure-11.15.png
 
-    Figure 11.15 Coalescing Two Temporaries
+    图11.15 Coalescing Two Temporaries
 
 UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这样的话，其中一个循环可以省去。在这个pass中，一旦消除了一个复制操作，就标记发生改变了。如果余下没有复制操作了，算法也可以停止。
 
@@ -313,11 +313,11 @@ UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这
 
 .. figure:: chapter11/figure-11.16.png
 
-    Figure 11.16 Finding Register Pressure In Flow Graph
+    图11.16 Finding Register Pressure In Flow Graph
 
 .. figure:: chapter11/figure-11.17.png
 
-    Figure 11.17 Finding Pressure in a Loop
+    图11.17 Finding Pressure in a Loop
 
 计算一个block的寄存器压力如图11.18所示。这个结构模仿了活跃/死亡分析所采用的计算局部生命期信息的方法。按照逆向执行顺序扫描block，按照向后的顺序执行每条指令。当发现一个定义时，其临时变量变为不活跃；当发现一个使用时，其临时变量变为活跃，除非它已经是活跃的。寄存器压力是每对指令之间活跃寄存器的数目。
 
@@ -359,11 +359,11 @@ UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这
 
 .. figure:: chapter11/figure-11.19.png
 
-    Figure 11.19 Computing Transparent Temporaries
+    图11.19 Computing Transparent Temporaries
 
 .. figure:: chapter11/figure-11.20.png
 
-    Figure 11.20 Main Through Calculation
+    图11.20 Main Through Calculation
 
 那些在整个循环中活跃而没有引用的临时变量的集合，是循环的每个组件的相应集合的交集。函数COMPUTE_THROUGH_LOOP计算这个交集。编译器只关注最外层循环，在其中一个临时变量是活跃的而没有引用，因此计算循环的Through集合之后，它删除内层循环中对这些临时变量的引用。
 
@@ -385,11 +385,11 @@ UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这
 
 .. figure:: chapter11/figure-11.21.png
 
-    Figure 11.21 Driver for Reducing the Pressure
+    图11.21 Driver for Reducing the Pressure
 
 .. figure:: chapter11/figure-11.22.png
 
-    Figure 11.22 Spilling Temporaries in a Loop
+    图11.22 Spilling Temporaries in a Loop
 
 怎么选择待挤出的临时变量呢？考虑图11.23中的算法。选择压力超额最多的循环（或block）。这个循环的Through集合中的每个临时变量都是挤出候选者。被选的临时变量也是大多数其它需要挤出临时变量的循环的挤出候选者。这让优化安置load和store操作的算法获得最大的机会来避免一些load和store操作。
 
@@ -397,15 +397,15 @@ UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这
 
 .. figure:: chapter11/figure-11.23.png
 
-    Figure 11.23 Choosing which Loop Temporary to Spill
+    图11.23 Choosing which Loop Temporary to Spill
 
 .. figure:: chapter11/figure-11.24.png
 
-    Figure 11.24 Inserting Spilled Loads and Stores
+    图11.24 Inserting Spilled Loads and Stores
 
 .. figure:: chapter11/figure-11.25.png
 
-    Figure 11.25 Updating Pressure
+    图11.25 Updating Pressure
 
 更新寄存器压力是代价最高的动作，因此编译器采用近似的办法减小预先选择的循环和block的压力。优化安置load和store操作的算法可能在其它地方减小压力。然而，在一个循环内的很多必要的地方挤出相同的临时变量，让近似方法表现更好。所有这样的循环和block确实挤出了临时变量，调整了压力，原来它们的压力是高的，并且有临时变量可以被挤出。那些压力不太高的循环或者block，其压力得不到调整。因此，算法会遍历循环树，所记录的压力减一。当到达压力低的叶子或循环时，就停下来。在图11.25中，算法被描述为简单地向下遍历这棵树，修正属性Pressure的值。
 
@@ -420,11 +420,11 @@ UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这
 
 .. figure:: chapter11/figure-11.26.png
 
-    Figure 11.26 List of Uses for Reducing Pressure
+    图11.26 List of Uses for Reducing Pressure
 
 .. figure:: chapter11/figure-11.27.png
 
-    Figure 11.27 Reducing Pressure in a Block
+    图11.27 Reducing Pressure in a Block
 
 应该存储哪个临时变量呢？那个将来下一次使用位置最远的临时变量。换句话说，扫描活跃临时变量集合，选择其使用列表的下一个条目最近的一个临时变量。这是单pass寄存器分配器使用的经典启发式方法，它尽可能让一个寄存器保持长时间可用。
 
@@ -432,7 +432,7 @@ UNION/FIND算法正常的实现让T0或T1作为新的临时变量代表。？这
 
 .. figure:: chapter11/figure-11.28.png
 
-    Figure 11.28 Inserting a Spill within a Block
+    图11.28 Inserting a Spill within a Block
 
 11.8 优化Spill指令的位置
 ************************
@@ -487,7 +487,7 @@ STORE_EARLIEST的计算利用了EARLIEST方程，将存储操作的预期集合�
 
 .. figure:: chapter11/figure-11.29.png
 
-    Figure 11.29 Inserting and Deleting Spilled STOREs
+    图11.29 Inserting and Deleting Spilled STOREs
 
 哪些指令杀死一个LOAD指令？临时变量的一次使用或求值杀死一个LOAD指令。使用会杀死它，因为越过这个使用移动LOAD将破坏这个使用的值。临时变量的求值会杀死它，因为它会生成一个值，它不同于内存中的值。
 

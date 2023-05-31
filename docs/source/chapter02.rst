@@ -11,7 +11,7 @@
 
 .. figure:: chapter02/figure-2.1.png
 
-    Figure 2.1 Finding Largest Elements in a Column
+    图2.1 Finding Largest Elements in a Column
 
 
 2.1 编译器结构概述
@@ -68,12 +68,12 @@ COMPASS编译器引擎的经验告诉我们，一个操作计算得到的值必�
 
 .. figure:: chapter02/figure-2.2.png
 
-    Figure 2.2 Operation Codes Used In Examples
+    图2.2 Operation Codes Used In Examples
 
 
 .. figure:: chapter02/figure-2.3.png
 
-    Figure 2.3 Example Flow Graph
+    图2.3 Example Flow Graph
 
 
 源程序的执行被建模为穿越图的一条路径。这条路径从入口节点开始，到出口节点终止。按照路径上节点的出现次序，路径中的每个节点内的计算得到执行。事实上，路径中的下一个节点是由节点中的计算决定的。在图2.3中，一条可能的路径是B0，B1，B2，B4，B1，B3，B4，B5。这条执行路径意味着，执行B0内的所有计算，然后B1内的所有计算，然后B2，等等。注意，B1和B4内的计算被执行了两次。
@@ -91,7 +91,7 @@ COMPASS编译器引擎的经验告诉我们，一个操作计算得到的值必�
 
 .. figure:: chapter02/figure-2.4.png
 
-    Figure 2.4 Compiler Structure
+    图2.4 Compiler Structure
 
 
 过程间优化phase分析当前流图中的过程调用和整个程序中所有其它过程的流图。它找出哪些变量可能被过程调用修改，哪些变量和表达式可能引用相同的内存位置，哪些参数是已知的常量。它保存这些信息，为其它phase所用。
@@ -123,7 +123,7 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.5.png
 
-    Figure 2.5 Abstract Syntax Tree for MAXCOL
+    图2.5 Abstract Syntax Tree for MAXCOL
 
 
 注意，这个树结构表示了程序完整的结构，指示了子函数的哪些部分包含在别的部分中。
@@ -153,11 +153,11 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.6.png
 
-    Figure 2.6 Initial Program Representation
+    图2.6 Initial Program Representation
 
 .. figure:: chapter02/figure-2.7.png
 
-    Figure 2.7 Initial Formal Temporary Table
+    图2.7 Initial Formal Temporary Table
 
 
 可以应用代数恒等式消除操作。例如，A * 0可以被替换为0。只有当计算A的副作用可以被忽略时，才可以这样做。有大量的代数恒等式可以被应用；然而，其中的小部分总是被用起来了，而我们明白，当发现新的代数恒等式可以改进程序的时候，就可以把它们加进来。
@@ -179,7 +179,7 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.8.png
 
-    Figure 2.8 Flow Graph after Simplifications
+    图2.8 Flow Graph after Simplifications
 
 
 常量传播找出已经被赋以常量值的变量，并且把对它们的使用替换为这个常量本身。如果程序中的分支条件用到了常量，就可以决定并删除不会被执行的分支。
@@ -202,7 +202,7 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.9.png
 
-    Figure 2.9 After Dominator Value Numbering
+    图2.9 After Dominator Value Numbering
 
 
 2.5 过程间分析
@@ -233,11 +233,11 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.10.png
 
-    Figure 2.10 Example of Scalar Replacement
+    图2.10 Example of Scalar Replacement
 
 .. figure:: chapter02/figure-2.11.png
 
-    Figure 2.11 Striding Down the Columns
+    图2.11 Striding Down the Columns
 
 
 考虑图2.11中的Fortran片段，它两次复制数组A到B。在Fortran中，列的元素被存储在内存中相邻次序的位置。当硬件读取一个特定的元素的时候，会向高速缓存读入一整个缓存线（cache line）（典型地，32字节到128字节），但是下一个元素是行中的下一个元素，它不在这个缓存线中；相反，它可能处在内存中很远的位置。当内层循环结束的时候，外层循环的下次迭代开始执行，当前高速缓存中的元素可能已经被剔除出去了。
@@ -248,7 +248,7 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.12.png
 
-    Figure 2.12 Original (left) and Unrolled (right) Loop
+    图2.12 Original (left) and Unrolled (right) Loop
 
 
 2.7 全局优化
@@ -279,7 +279,7 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.13.png
 
-    Figure 2.13 Strength-Reduction Inner Loop
+    图2.13 Strength-Reduction Inner Loop
 
 
 在编译器粗略的模拟过程中，我们发现编译器需要在强度减弱之前执行或多或少的冗余表达式删除、常量传播和常量合并。把强度减弱（和表达式整形）当作之前讨论的基于支配者的优化的一部分来执行，可以让我们得到此信息。
@@ -302,12 +302,12 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.14.png
 
-    Figure 2.14 Header Block after Optimization
+    图2.14 Header Block after Optimization
 
 
 .. figure:: chapter02/figure-2.15.png
 
-    Figure 2.15 After Strength-Reducing Outer Loop
+    图2.15 After Strength-Reducing Outer Loop
 
 
 检查流图，这个时刻正好。编译器已经创建了流图，简化了表达式，删除了大部分冗余表达式，应用了强度减弱，并执行了表达式整形。除了为强度减弱插入了一些专用的代码，没有移动任何表达式。代码移动将把代码移出循环。
@@ -324,14 +324,14 @@ fetch节点区分地址和值。这个编译器作了一个统一的关于表达
 
 .. figure:: chapter02/figure-2.16.png
 
-    Figure 2.16 After Code Motion
+    图2.16 After Code Motion
 
 
 现在，利用部分冗余性，我们可以在反向程序流图上向前移动store操作，如图2.17所示。在循环中出现的到VALUE(I)和LARGE(I)的store可以被移动到block B4。虽然我们以为这是移出循环的一次移动，但是分析过程跟循环没有关系。这取决于这样的事实：在每条到达B4的路径上都出现了这些store操作，这些重复的store确实出现在循环内。以上处理结合死代码删除，给我们带来这些优化phase的最终结果。
 
 .. figure:: chapter02/figure-2.17.png
 
-    Figure 2.17 After Store Motion
+    图2.17 After Store Motion
 
 
 2.8 限制资源
@@ -385,12 +385,12 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.18.png
 
-    Figure 2.18 After Code Lowering
+    图2.18 After Code Lowering
 
 
 .. figure:: chapter02/figure-2.19.png
 
-    Figure 2.19 Computing Right Number of Names
+    图2.19 Computing Right Number of Names
 
 
 为了计算寄存器压力，编译器需要知道在流图的每个点，有哪些以后将被用到的临时变量，换句话说，程序中每个点的活跃的临时变量的集合。为了方便说明，每个临时变量活跃的点的集合被表示为一系列以两个数字表示的间隔，这些数字关联着图2.18中的每条指令。如果一个临时变量在间隔的第一条指令的开始处是活跃的，我们就用一个闭合的中括号表示它。如果它在一条指令的中间变得活跃了，我们就用一个开放得小括号表示它。图2.20显示了每个寄存器活跃的指令范围。
@@ -399,7 +399,7 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.20.png
 
-    Figure 2.20 Table of Live Ranges
+    图2.20 Table of Live Ranges
 
 
 我们为每个寄存器集计算单独的寄存器压力：整数和浮点数。我们已经展示了整数寄存器的寄存器压力。图2.21没有给出浮点寄存器的寄存器压力，这样让这个表更容易理解；然而，程序中只有三个浮点寄存器，所以确定其寄存器压力是简单明了的。
@@ -410,7 +410,7 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.21.png
 
-    Figure 2.21 Live Registers and Register Pressure Before Instruction
+    图2.21 Live Registers and Register Pressure Before Instruction
 
 
 我们利用堆栈（SP是一个专用的寄存器）将寄存器spill到内存。注意，寄存器压力在某个点达到了峰值，通过spill一个寄存器，我们减小了其它点处的寄存器压力。
@@ -419,7 +419,7 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.22.png
 
-    Figure 2.22 Load and Store Operations for Spill
+    图2.22 Load and Store Operations for Spill
 
 
 在限制资源phase之后，编译器知道在程序流图的任意点其操作所引用的资源都是可用的。编译器剩余的phase都会保持这个不变属性，无论它们何时执行转换。
@@ -463,7 +463,7 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.23.png
 
-    Figure 2.23 Scheduled Instructions
+    图2.23 Scheduled Instructions
 
 
 2.10 寄存器分配
@@ -489,12 +489,12 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.24.png
 
-    Figure 2.24 Live Ranges after Scheduling
+    图2.24 Live Ranges after Scheduling
 
 
 .. figure:: chapter02/figure-2.25.png
 
-    Figure 2.25 Global Register Assignments
+    图2.25 Global Register Assignments
 
 
 在所有block开始处活跃的寄存器被分配之后，我们可以分配只在单个block内部活跃的符号化寄存器。在这个小的样例中，只有几个。在实际的程序中，这些寄存器的数目比全局活跃寄存器的大得多。图2.26列出了这些局部寄存器。寄存器会尽可能地被重用，因为编译器希望最小化所用寄存器的数目。这避免了使用非scratch寄存器的必要性，否则就需要在函数开头插入store操作以保存它的值，在结尾插入load操作以恢复它的值。
@@ -503,12 +503,12 @@ CPYS指令，接受两个操作数，产生一个浮点值，它结合了一个�
 
 .. figure:: chapter02/figure-2.26.png
 
-    Figure 2.26 Local Register Assignments
+    图2.26 Local Register Assignments
 
 
 .. figure:: chapter02/figure-2.27.png
 
-    Figure 2.27 Code after Register Allocation
+    图2.27 Code after Register Allocation
 
 
 2.11 再次调度

@@ -32,7 +32,7 @@
 
 .. figure:: chapter03/figure-3.1.png
 
-    Figure 3.1 Flow Graph for MAXCOL
+    图3.1 Flow Graph for MAXCOL
 
 另一种技术是为每个节点分配一个整数，并且将每条边表示为布尔矩阵中的位。如果节点 X 和 Y 之间有一条边，则在位置 EDGE[X,Y] 上该位被设置为真；否则设置为假。
 
@@ -55,14 +55,14 @@
 
 .. figure:: chapter03/figure-3.2.png
 
-    Figure 3.2 Basic Depth-First Search Algorithm
+    图3.2 Basic Depth-First Search Algorithm
 
 
 第二类包括后向边。这些是从一个节点到另一个已开始处理但尚未完成的节点的边。如果你看一下算法，这意味着边必须回到一个仍在被直接或递归调用它的过程处理的节点：在实现方面，边的头部是仍在堆栈上的节点，并且该节点将是深度优先树中当前节点的祖先。这条边从一个节点到由树边组成的树中的一个祖先。
 
 .. figure:: chapter03/figure-3.3.png
 
-    Figure 3.3 Depth-First Search Tree for MAXCOL
+    图3.3 Depth-First Search Tree for MAXCOL
 
 
 与后向边相对的是前向边。从 n 到 S 的前向边是从节点到其后继节点的边；但是，已经处理了后继者。事实上，它是作为 n 的其他一些后继处理的结果进行处理的。所以这是深度优先搜索树中从祖先到后代的边。
@@ -130,7 +130,7 @@
 
 .. figure:: chapter03/figure-3.4.png
 
-    Figure 3.4 Dominator Tree for MAXCOL
+    图3.4 Dominator Tree for MAXCOL
 
 
 当前用于计算直接支配树的算法是由 Lengauer 和 Tarjan (1979) 开发的。该算法有两种形式，运行时复杂度为 O(\|N|ln|N|) 或 O(\|N| (\|N|))，具体取决于实现的复杂度。我没有在这里说明算法，因为它太复杂，无法在可用空间中准确描述。相反，我将给出算法的合理化，然后是 Purdom 的更简单的算法，易于理解。
@@ -154,7 +154,7 @@ Tarjan 使用在程序控制流图的深度优先搜索期间收集的信息来�
 
 .. figure:: chapter03/figure-3.5.png
 
-    Figure 3.5 Computing the Common Dominator
+    图3.5 Computing the Common Dominator
 
 
 3.4 后支配者
@@ -173,7 +173,7 @@ Tarjan 使用在程序控制流图的深度优先搜索期间收集的信息来�
 
 .. figure:: chapter03/figure-3.6.png
 
-    Figure 3.6 Postdominator Tree for MAXCOL
+    图3.6 Postdominator Tree for MAXCOL
 
 
 3.5 支配边界
@@ -199,7 +199,7 @@ Tarjan 使用在程序控制流图的深度优先搜索期间收集的信息来�
 
 .. figure:: chapter03/figure-3.7.png
 
-    Figure 3.7 Computing the Dominance Frontier
+    图3.7 Computing the Dominance Frontier
 
 
 .. table:: Table 3.2 支配边界
@@ -277,7 +277,7 @@ B 应该是具有此特性的最新的块。确实，较早的块可能同样控
 
 .. figure:: chapter03/figure-3.8.png
 
-    Figure 3.8 Calculating Control Dependence
+    图3.8 Calculating Control Dependence
 
 
 .. table:: 表 3.3 示例程序的控制依赖关系
@@ -332,7 +332,7 @@ B 应该是具有此特性的最新的块。确实，较早的块可能同样控
 
 .. figure:: chapter03/figure-3.9.png
 
-    Figure 3.9 Template of Code for Finding a Loop
+    图3.9 Template of Code for Finding a Loop
 
 
 3.7.1 无限循环
@@ -348,7 +348,7 @@ B 应该是具有此特性的最新的块。确实，较早的块可能同样控
 
 .. figure:: chapter03/figure-3.10.png
 
-    Figure 3.10 Eliminating Infinite Loops
+    图3.10 Eliminating Infinite Loops
 
 
 3.7.2 单入口和多入口循环
@@ -372,12 +372,12 @@ B 应该是具有此特性的最新的块。确实，较早的块可能同样控
 
 .. figure:: chapter03/figure-3.11.png
 
-    Figure 3.11 Example Multiple-Entry Loop
+    图3.11 Example Multiple-Entry Loop
 
 
 .. figure:: chapter03/figure-3.12.png
 
-    Figure 3.12 Identifying a General Loop
+    图3.12 Identifying a General Loop
 
 
 我们将对 FIND_LOOP 稍作修改，以构建测试循环树，但这是基本算法。 当找到一个单入口循环时，循环体被识别。 当找到一个多入口循环时，循环体的识别被延迟到块Z的处理。这个循环体由非空生成器（Z）集合的存在来识别。
@@ -415,7 +415,7 @@ FIND_BODY 通过从生成循环的块向后移动到头部来计算循环体中�
 
 .. figure:: chapter03/figure-3.13.png
 
-    Figure 3.13 Computing Generators of a Loop
+    图3.13 Computing Generators of a Loop
 
 
 LoopAncestor 通过向上扫描 LoopParent 属性来查找包含当前循环或块的最外层已处理循环，直到找到具有空条目的节点。由于一旦识别出封闭循环，该属性就会由 FIND_BODY 更新为非空条目，因此该算法给出了最外层的现有循环。
@@ -426,22 +426,22 @@ LoopAncestor 通过向上扫描 LoopParent 属性来查找包含当前循环或�
 
 .. figure:: chapter03/figure-3.14.png
 
-    Figure 3.14 Computing the Body of a Loop
+    图3.14 Computing the Body of a Loop
 
 
 .. figure:: chapter03/figure-3.15.png
 
-    Figure 3.15 Finding the Outermost Processed Loop
+    图3.15 Finding the Outermost Processed Loop
 
 
 .. figure:: chapter03/figure-3.16.png
 
-    Figure 3.16 Computing the Complete Loop Tree
+    图3.16 Computing the Complete Loop Tree
 
 
 .. figure:: chapter03/figure-3.17.png
 
-    Figure 3.17 Loop Tree for Example Program
+    图3.17 Loop Tree for Example Program
 
 
 3.8 实现整数集
@@ -465,7 +465,7 @@ Preston Briggs (1993) 基于 Aho、Hopcroft 和 Ullman (1974) 中的提示开发
 
 .. figure:: chapter03/figure-3.18.png
 
-    Figure 3.18 Efficient Set Algorithm
+    图3.18 Efficient Set Algorithm
 
 
 基本操作发生在 O(1) 时间内，扫描集合中的元素与集合中的实际元素成正比。不过，它确实需要更多空间。考虑一个元素由 16 位数字表示的实现。因此，每个元素有 32 位，表明这种表示法占用的空间是位向量方法的 32 倍。因此，当只需要少量集合（通常是一两个）时，这种表示就可以很好地工作。

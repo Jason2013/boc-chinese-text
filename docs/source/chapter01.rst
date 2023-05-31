@@ -98,19 +98,19 @@ Ken Kennedy，纽约大学（NYU）的一个学生，在莱斯（Rice）大学�
 
 .. figure:: chapter01/figure-1.1.png
 
-    Figure 1.1 Running Exercise Throughout Book
+    图1.1 Running Exercise Throughout Book
 
 .. figure:: chapter01/figure-1.2.png
 
-    Figure 1.2 Matrix Multiply Example
+    图1.2 Matrix Multiply Example
 
 .. figure:: chapter01/figure-1.3.png
 
-    Figure 1.3 Computing the Maximum Monotone Subsequence
+    图1.3 Computing the Maximum Monotone Subsequence
 
 .. figure:: chapter01/figure-1.4.png
 
-    Figure 1.4 Recursive Version of a Binary Search
+    图1.4 Recursive Version of a Binary Search
 
 
 图1.2是一个经典的矩阵相乘算法。它包含大量的浮点数计算，伴随着不平衡的内存访问。如图所示，里面的循环包含两个浮点运算，三个load操作，和一个store操作。问题在于，当发生的内存操作比计算更多时，如何从机器获得良好的性能。
